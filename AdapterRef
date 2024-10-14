@@ -1,0 +1,43 @@
+class EventAdapter: ListAdapter<ListEventsItem, EventAdapter.EventHolder>(DIFF_CALLBACK) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventAdapter.EventHolder {
+        val binding = ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return EventHolder(binding)
+    }
+ 
+    override fun onBindViewHolder(holder: EventAdapter.EventHolder, position: Int) {
+        val event = getItem(position)
+        holder.bind(event, holder)
+    }
+ 
+    class EventHolder(val binding: ItemEventBinding): RecyclerView.ViewHolder(binding.root){
+        fun bind(event: ListEventsItem, holder: EventAdapter.EventHolder){
+            // binding data to UI and data from reponse api
+            println("URL IMAGE : ${event.mediaCover}")
+            Glide.with(holder.itemView.context)
+                .load(event.imageLogo)
+                .fitCenter()
+                .into(binding.imgEvent)
+            binding.titleEvent.text = event.name
+            binding.categoryEvent.text = event.category
+            binding.descriptionEvent.text = event.description
+        }
+    }
+ 
+    companion object{
+        val DIFF_CALLBACK = object: DiffUtil.ItemCallback<ListEventsItem>(){
+            override fun areItemsTheSame(
+                oldItem: ListEventsItem,
+                newItem: ListEventsItem
+            ): Boolean {
+                return oldItem == newItem
+            }
+ 
+            override fun areContentsTheSame(
+                oldItem: ListEventsItem,
+                newItem: ListEventsItem
+            ): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
+}
